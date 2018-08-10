@@ -1,14 +1,13 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/sirupsen/logrus"
-	"gopkg.in/go-playground/webhooks.v3/bitbucket"
 	"gopkg.in/telegram-bot-api.v4"
 )
 
@@ -67,27 +66,26 @@ func (bot Bot) push(w http.ResponseWriter, r *http.Request) {
 func (bot Bot) mergeCreated(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("New PR to repo, begin decoding...")
 
-	decoder := json.NewDecoder(r.Body)
-	var pr bitbucket.PullRequest
-	err := decoder.Decode(&pr)
+	responseData, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		log.Println("Error decoding!")
+		log.Fatal(err)
 	}
 
-	fmt.Printf("New pull request: %v", pr)
+	responseString := string(responseData)
+
+	fmt.Printf("New pull request: %v", responseString)
 }
 
 func (bot Bot) mergeAccepted(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("PR merged! Begin decoding...")
 
-	decoder := json.NewDecoder(r.Body)
-	var pr bitbucket.PullRequestMergedPayload
-	err := decoder.Decode(&pr)
+	responseData, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		log.Println("Error decoding!")
+		log.Fatal(err)
 	}
 
-	fmt.Printf("PR merged: %v", pr)
+	responseString := string(responseData)
+	fmt.Printf("PR merged: %v", responseString)
 }
 
 func (bot Bot) sendUpdate(text string) {
