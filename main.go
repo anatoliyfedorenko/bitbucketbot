@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -31,13 +32,8 @@ func main() {
 
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
-	updates := bot.ListenForWebhook("/push")
-	go http.ListenAndServe(":8080", nil)
-
-	for update := range updates {
-		log.Printf("%+v\n", update)
-		log.Println("Someone pushed to channel!")
-	}
+	http.HandleFunc("/push", push)
+	http.ListenAndServe(":8080", nil)
 }
 
 // Get method processes env variables and fills Config struct
@@ -47,4 +43,8 @@ func getConfig() (Config, error) {
 		return c, err
 	}
 	return c, nil
+}
+
+func push(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Someone just pushed to repo!")
 }
