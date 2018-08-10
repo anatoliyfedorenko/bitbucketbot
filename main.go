@@ -1,12 +1,13 @@
 package main
 
 import (
-	"io/ioutil"
+	"encoding/json"
 	"log"
 	"net/http"
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/sirupsen/logrus"
+	"gopkg.in/go-playground/webhooks.v3/bitbucket"
 	"gopkg.in/telegram-bot-api.v4"
 )
 
@@ -82,9 +83,11 @@ func (bot Bot) sendUpdate(text string) {
 }
 
 func getResponseString(r *http.Request) string {
-	responseData, err := ioutil.ReadAll(r.Body)
+	decoder := json.NewDecoder(r.Body)
+	var pr *bitbucket.PullRequest
+	err := decoder.Decode(&pr)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
-	return string(responseData)
+	return pr.Title
 }
