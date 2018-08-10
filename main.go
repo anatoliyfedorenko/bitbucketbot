@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -64,31 +63,24 @@ func (bot Bot) push(w http.ResponseWriter, r *http.Request) {
 }
 
 func (bot Bot) mergeCreated(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("New PR to repo, begin decoding...")
-
-	responseData, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	responseString := string(responseData)
-
-	fmt.Printf("New pull request: %v", responseString)
+	bot.sendUpdate("New PR created! Here is the data: \n")
+	bot.sendUpdate(getResponseString(r))
 }
 
 func (bot Bot) mergeAccepted(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("PR merged! Begin decoding...")
-
-	responseData, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	responseString := string(responseData)
-	fmt.Printf("PR merged: %v", responseString)
+	bot.sendUpdate("PR merged! Here is the data: \n")
+	bot.sendUpdate(getResponseString(r))
 }
 
 func (bot Bot) sendUpdate(text string) {
 	m := tgbotapi.NewMessage(bot.c.Chat, text)
 	bot.API.Send(m)
+}
+
+func getResponseString(r *http.Request) string {
+	responseData, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(responseData)
 }
