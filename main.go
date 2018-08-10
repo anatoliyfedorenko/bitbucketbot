@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -53,6 +54,7 @@ func getConfig() (Config, error) {
 }
 
 func (bot Bot) push(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Someone just pushed to repo!")
 	m := tgbotapi.NewMessage(bot.c.Chat, "Someone just pushed to repo!")
 	bot.API.Send(m)
 }
