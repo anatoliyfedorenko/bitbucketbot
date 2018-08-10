@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -89,13 +90,17 @@ func getConfig() (Config, error) {
 func (bot Bot) push(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("New push to repo, begin decoding...")
 
-	decoder := json.NewDecoder(r.Body)
-	var push Push
-	err := decoder.Decode(&push)
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	log.Printf("ReadAll Body: %v", b)
+
+	var p Push
+	err = json.Unmarshal(b, &p)
 	if err != nil {
-		panic(err)
+		log.Println(err)
 	}
-	log.Printf("User: %v, Repo: %v", push.user, push.repository)
+
+	log.Printf("User: %v, Repo: %v", p.user, p.repository)
 
 	bot.sendUpdate("New push to repo!")
 }
