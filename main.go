@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -32,8 +31,8 @@ type (
 	}
 
 	Push struct {
-		user       []byte `json:"actor"`
-		repository []byte `json:"repository"`
+		user       string `json:"actor"`
+		repository string `json:"repository"`
 	}
 
 	PullRequest struct {
@@ -90,19 +89,16 @@ func getConfig() (Config, error) {
 func (bot Bot) push(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("New push to repo, begin decoding...")
 
-	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-	log.Printf("ReadAll Body: %v", b)
-
+	decoder := json.NewDecoder(r.Body)
 	var p Push
-	err = json.Unmarshal(b, &p)
+	err := decoder.Decode(&p)
 	if err != nil {
-		log.Println(err)
+		log.Println("Error decoding!")
 	}
 
-	log.Printf("User: %v, Repo: %v", p.user, p.repository)
+	text := fmt.Sprintf("User: %v pushed to repo: %v", p.user, p.repository)
 
-	bot.sendUpdate("New push to repo!")
+	bot.sendUpdate(text)
 }
 
 func (bot Bot) mergeCreated(w http.ResponseWriter, r *http.Request) {
