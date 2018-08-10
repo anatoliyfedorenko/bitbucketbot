@@ -1,22 +1,50 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
+
+	"github.com/kelseyhightower/envconfig"
+	"github.com/sirupsen/logrus"
+	"gopkg.in/telegram-bot-api.v4"
 )
 
-func ping(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("pong"))
-}
-
-func push(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Someone just pushed to repo!")
+//Config defines config struct
+type Config struct {
+	TelegramToken string `envconfig:"TELEGRAM_TOKEN" required:"true"`
+	Chat          int64  `envconfig:"CHAT" required:"true"`
 }
 
 func main() {
-	http.HandleFunc("/ping", ping)
-	http.HandleFunc("/push", push)
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		panic(err)
+
+	conf, err := getConfig()
+	if err != nil {
+		logrus.Error(err)
 	}
+
+	bot, err := tgbotapi.NewBotAPI(conf.TelegramToken)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	bot.Debug = true
+
+	log.Printf("Authorized on account %s", bot.Self.UserName)
+
+	updates := bot.ListenForWebhook("/push")
+	go http.ListenAndServe(":8080", nil)
+
+	for update := range updates {
+		log.Printf("%+v\n", update)
+		log.Println("Someone pushed to channel!")
+	}
+}
+
+// Get method processes env variables and fills Config struct
+func getConfig() (Config, error) {
+	var c Config
+	if err := envconfig.Process("bot", &c); err != nil {
+		return c, err
+	}
+	return c, nil
 }
