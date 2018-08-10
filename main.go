@@ -8,6 +8,7 @@ import (
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/sirupsen/logrus"
+	"gopkg.in/go-playground/webhooks.v3/bitbucket"
 	"gopkg.in/telegram-bot-api.v4"
 )
 
@@ -22,33 +23,6 @@ type (
 	Bot struct {
 		API *tgbotapi.BotAPI
 		c   Config
-	}
-
-	User struct {
-		userType    string `json: type`
-		userName    string `json: username`
-		displayName string `json: display_name`
-	}
-
-	Push struct {
-		user       string `json:"actor"`
-		repository string `json:"repository"`
-	}
-
-	PullRequest struct {
-		id          int64  `json:"id"`
-		title       string `json:"title"`
-		description string `json:"description"`
-	}
-
-	MergeCreated struct {
-		owner       User        `json:"actor"`
-		pullRequest PullRequest `json:"pullrequest"`
-	}
-
-	MergeAccepted struct {
-		owner       User        `json:"actor"`
-		pullRequest PullRequest `json:"pullrequest"`
 	}
 )
 
@@ -87,28 +61,33 @@ func getConfig() (Config, error) {
 }
 
 func (bot Bot) push(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("New push to repo, begin decoding...")
+	log.Println("New push created!")
+}
+
+func (bot Bot) mergeCreated(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("New PR to repo, begin decoding...")
 
 	decoder := json.NewDecoder(r.Body)
-	var p Push
-	err := decoder.Decode(&p)
+	var pr bitbucket.PullRequest
+	err := decoder.Decode(&pr)
 	if err != nil {
 		log.Println("Error decoding!")
 	}
 
-	text := fmt.Sprintf("User: %v pushed to repo: %v", p.user, p.repository)
-
-	bot.sendUpdate(text)
-}
-
-func (bot Bot) mergeCreated(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("MR to repo!")
-	bot.sendUpdate("MR to repo!")
+	fmt.Printf("New pull request: %v", pr)
 }
 
 func (bot Bot) mergeAccepted(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("MR accepted!")
-	bot.sendUpdate("MR accepted!")
+	fmt.Println("PR merged! Begin decoding...")
+
+	decoder := json.NewDecoder(r.Body)
+	var pr bitbucket.PullRequestMergedPayload
+	err := decoder.Decode(&pr)
+	if err != nil {
+		log.Println("Error decoding!")
+	}
+
+	fmt.Printf("PR merged: %v", pr)
 }
 
 func (bot Bot) sendUpdate(text string) {
