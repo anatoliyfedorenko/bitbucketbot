@@ -44,7 +44,6 @@ func main() {
 
 	log.Printf("Authorized on account %s", bot.API.Self.UserName)
 
-	http.HandleFunc("/push", bot.push)
 	http.HandleFunc("/merge_created", bot.mergeCreated)
 	http.HandleFunc("/merge_accepted", bot.mergeAccepted)
 	http.ListenAndServe(":8080", nil)
@@ -59,35 +58,31 @@ func getConfig() (Config, error) {
 	return c, nil
 }
 
-func (bot Bot) push(w http.ResponseWriter, r *http.Request) {
-	log.Println("New push created!")
-}
-
 func (bot Bot) mergeCreated(w http.ResponseWriter, r *http.Request) {
 	bot.sendUpdate("New PR created! \n")
-	text := getResponseString(r)
-	log.Println(text)
-	bot.sendUpdate(text)
+	decoder := json.NewDecoder(r.Body)
+	var pr bitbucket.PullRequestCreatedPayload
+	err := decoder.Decode(&pr)
+	if err != nil {
+		logrus.Errorf("Decode failed: %v", err)
+	}
+	logrus.Infof("Full Info: %v", pr)
+	bot.sendUpdate(pr.PullRequest.Title)
 }
 
 func (bot Bot) mergeAccepted(w http.ResponseWriter, r *http.Request) {
 	bot.sendUpdate("PR merged! \n")
-	text := getResponseString(r)
-	log.Println(text)
-	bot.sendUpdate(text)
+	decoder := json.NewDecoder(r.Body)
+	var pr bitbucket.PullRequestMergedPayload
+	err := decoder.Decode(&pr)
+	if err != nil {
+		logrus.Errorf("Decode failed: %v", err)
+	}
+	logrus.Infof("Full Info: %v", pr)
+	bot.sendUpdate(pr.PullRequest.Title)
 }
 
 func (bot Bot) sendUpdate(text string) {
 	m := tgbotapi.NewMessage(bot.c.Chat, text)
 	bot.API.Send(m)
-}
-
-func getResponseString(r *http.Request) string {
-	decoder := json.NewDecoder(r.Body)
-	var pr *bitbucket.PullRequest
-	err := decoder.Decode(&pr)
-	if err != nil {
-		panic(err)
-	}
-	return pr.Title
 }
