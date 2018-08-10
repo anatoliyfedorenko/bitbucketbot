@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -10,16 +11,46 @@ import (
 	"gopkg.in/telegram-bot-api.v4"
 )
 
-//Config defines config struct
-type Config struct {
-	TelegramToken string `envconfig:"TELEGRAM_TOKEN" required:"true"`
-	Chat          int64  `envconfig:"CHAT" required:"true"`
-}
+type (
+	//Config defines config struct
+	Config struct {
+		TelegramToken string `envconfig:"TELEGRAM_TOKEN" required:"true"`
+		Chat          int64  `envconfig:"CHAT" required:"true"`
+	}
 
-type Bot struct {
-	API *tgbotapi.BotAPI
-	c   Config
-}
+	//Bot defines bot struct
+	Bot struct {
+		API *tgbotapi.BotAPI
+		c   Config
+	}
+
+	User struct {
+		userType    string `json: type`
+		userName    string `json: username`
+		displayName string `json: display_name`
+	}
+
+	Push struct {
+		user       []byte `json:"actor"`
+		repository []byte `json:"repository"`
+	}
+
+	PullRequest struct {
+		id          int64  `json:"id"`
+		title       string `json:"title"`
+		description string `json:"description"`
+	}
+
+	MergeCreated struct {
+		owner       User        `json:"actor"`
+		pullRequest PullRequest `json:"pullrequest"`
+	}
+
+	MergeAccepted struct {
+		owner       User        `json:"actor"`
+		pullRequest PullRequest `json:"pullrequest"`
+	}
+)
 
 func main() {
 
@@ -41,6 +72,8 @@ func main() {
 	log.Printf("Authorized on account %s", bot.API.Self.UserName)
 
 	http.HandleFunc("/push", bot.push)
+	http.HandleFunc("/merge_created", bot.mergeCreated)
+	http.HandleFunc("/merge_accepted", bot.mergeAccepted)
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -54,7 +87,30 @@ func getConfig() (Config, error) {
 }
 
 func (bot Bot) push(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Someone just pushed to repo!")
-	m := tgbotapi.NewMessage(bot.c.Chat, "Someone just pushed to repo!")
+	fmt.Println("New push to repo, begin decoding...")
+
+	decoder := json.NewDecoder(r.Body)
+	var push Push
+	err := decoder.Decode(&push)
+	if err != nil {
+		panic(err)
+	}
+	log.Printf("User: %v, Repo: %v", push.user, push.repository)
+
+	bot.sendUpdate("New push to repo!")
+}
+
+func (bot Bot) mergeCreated(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("MR to repo!")
+	bot.sendUpdate("MR to repo!")
+}
+
+func (bot Bot) mergeAccepted(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("MR accepted!")
+	bot.sendUpdate("MR accepted!")
+}
+
+func (bot Bot) sendUpdate(text string) {
+	m := tgbotapi.NewMessage(bot.c.Chat, text)
 	bot.API.Send(m)
 }
