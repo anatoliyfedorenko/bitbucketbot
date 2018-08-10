@@ -1,12 +1,15 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/sirupsen/logrus"
+	"gopkg.in/go-playground/webhooks.v3/bitbucket"
 	"gopkg.in/telegram-bot-api.v4"
 )
 
@@ -65,7 +68,12 @@ func (bot Bot) push(w http.ResponseWriter, r *http.Request) {
 func (bot Bot) mergeCreated(w http.ResponseWriter, r *http.Request) {
 	bot.sendUpdate("New PR created! \n")
 	text := getResponseString(r)
-	log.Println(text)
+	data := &bitbucket.PullRequest{}
+	err := json.Unmarshal([]byte(text), data)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(data.Title)
 }
 
 func (bot Bot) mergeAccepted(w http.ResponseWriter, r *http.Request) {
