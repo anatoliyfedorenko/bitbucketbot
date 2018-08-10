@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -16,6 +15,11 @@ type Config struct {
 	Chat          int64  `envconfig:"CHAT" required:"true"`
 }
 
+type Bot struct {
+	API *tgbotapi.BotAPI
+	c   Config
+}
+
 func main() {
 
 	conf, err := getConfig()
@@ -23,16 +27,19 @@ func main() {
 		logrus.Error(err)
 	}
 
-	bot, err := tgbotapi.NewBotAPI(conf.TelegramToken)
+	bot := &Bot{}
+
+	b, err := tgbotapi.NewBotAPI(conf.TelegramToken)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	bot.Debug = true
+	bot.API = b
+	bot.c = conf
 
-	log.Printf("Authorized on account %s", bot.Self.UserName)
+	log.Printf("Authorized on account %s", bot.API.Self.UserName)
 
-	http.HandleFunc("/push", push)
+	http.HandleFunc("/push", bot.push)
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -45,6 +52,7 @@ func getConfig() (Config, error) {
 	return c, nil
 }
 
-func push(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Someone just pushed to repo!")
+func (bot Bot) push(w http.ResponseWriter, r *http.Request) {
+	m := tgbotapi.NewMessage(bot.c.Chat, "Someone just pushed to repo!")
+	bot.API.Send(m)
 }
