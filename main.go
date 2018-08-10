@@ -66,12 +66,14 @@ func (bot Bot) mergeCreated(w http.ResponseWriter, r *http.Request) {
 	bot.sendUpdate("New PR created! \n")
 	text := getResponseString(r)
 	log.Println(text)
+	bot.sendUpdate(text)
 }
 
 func (bot Bot) mergeAccepted(w http.ResponseWriter, r *http.Request) {
 	bot.sendUpdate("PR merged! \n")
 	text := getResponseString(r)
 	log.Println(text)
+	bot.sendUpdate(text)
 }
 
 func (bot Bot) sendUpdate(text string) {
