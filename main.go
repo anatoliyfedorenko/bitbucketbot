@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -31,14 +32,11 @@ func main() {
 	if err != nil {
 		logrus.Error(err)
 	}
-
 	bot := &Bot{}
-
 	b, err := tgbotapi.NewBotAPI(conf.TelegramToken)
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	bot.API = b
 	bot.c = conf
 
@@ -67,7 +65,17 @@ func (bot Bot) mergeCreated(w http.ResponseWriter, r *http.Request) {
 		logrus.Errorf("Decode failed: %v", err)
 	}
 	logrus.Infof("Full Info: %v", pr)
-	bot.sendUpdate(pr.PullRequest.Title)
+	text := fmt.Sprintf("There is a new pull request in %v created by %v! Please, click [here](%v) to view details!", pr.Repository.FullName, pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href)
+	bot.sendUpdate(text)
+
+	prDetails := "Pull Request data: \n"
+	prDetails += fmt.Sprintf("title: %v \n", pr.PullRequest.Title)
+	prDetails += fmt.Sprintf("description: %v \n", pr.PullRequest.Description)
+	prDetails += fmt.Sprintf("from %v to %v \n", pr.PullRequest.Source.Branch.Name, pr.PullRequest.Destination.Branch.Name)
+	prDetails += fmt.Sprintf("Reviews needed from: %v \n", pr.PullRequest.Reviewers)
+
+	bot.sendUpdate(prDetails)
+
 }
 
 func (bot Bot) mergeAccepted(w http.ResponseWriter, r *http.Request) {
