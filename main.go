@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -31,20 +32,19 @@ func main() {
 	if err != nil {
 		logrus.Error(err)
 	}
-
 	bot := &Bot{}
-
 	b, err := tgbotapi.NewBotAPI(conf.TelegramToken)
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	bot.API = b
 	bot.c = conf
 
 	log.Printf("Authorized on account %s", bot.API.Self.UserName)
 
 	http.HandleFunc("/merge_created", bot.mergeCreated)
+	http.HandleFunc("/merge_commented", bot.mergeCommented)
+	http.HandleFunc("/merge_approved", bot.mergeApproved)
 	http.HandleFunc("/merge_accepted", bot.mergeAccepted)
 	http.ListenAndServe(":8080", nil)
 }
@@ -59,15 +59,36 @@ func getConfig() (Config, error) {
 }
 
 func (bot Bot) mergeCreated(w http.ResponseWriter, r *http.Request) {
-	bot.sendUpdate("New PR created! \n")
 	decoder := json.NewDecoder(r.Body)
 	var pr bitbucket.PullRequestCreatedPayload
 	err := decoder.Decode(&pr)
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	logrus.Infof("Full Info: %v", pr)
-	bot.sendUpdate(pr.PullRequest.Title)
+	text := fmt.Sprintf("Пользователь %s создал пул реквест! [Посмотреть](%v)", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href)
+	bot.sendUpdate(text)
+}
+
+func (bot Bot) mergeCommented(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+	var pr bitbucket.PullRequestCommentCreatedPayload
+	err := decoder.Decode(&pr)
+	if err != nil {
+		logrus.Errorf("Decode failed: %v", err)
+	}
+	text := fmt.Sprintf("%s написал комментарий к пул реквесту (%v). [Посмотреть](%v)", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href, pr.Comment.Links.HTML.Href)
+	bot.sendUpdate(text)
+}
+
+func (bot Bot) mergeApproved(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+	var pr bitbucket.PullRequestApprovedPayload
+	err := decoder.Decode(&pr)
+	if err != nil {
+		logrus.Errorf("Decode failed: %v", err)
+	}
+	text := fmt.Sprintf("Пул реквест был одобрен %v! [Посмотреть](%v)", pr.Approval.User.DisplayName, pr.PullRequest.Links.HTML.Href)
+	bot.sendUpdate(text)
 }
 
 func (bot Bot) mergeAccepted(w http.ResponseWriter, r *http.Request) {
@@ -78,8 +99,8 @@ func (bot Bot) mergeAccepted(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	logrus.Infof("Full Info: %v", pr)
-	bot.sendUpdate(pr.PullRequest.Title)
+	text := fmt.Sprintf("Пул реквест был мержнут пользователем %v! [Посмотреть](%v)", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href)
+	bot.sendUpdate(text)
 }
 
 func (bot Bot) sendUpdate(text string) {
