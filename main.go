@@ -43,6 +43,8 @@ func main() {
 	log.Printf("Authorized on account %s", bot.API.Self.UserName)
 
 	http.HandleFunc("/merge_created", bot.mergeCreated)
+	http.HandleFunc("/merge_commented", bot.mergeCommented)
+	http.HandleFunc("/merge_approved", bot.mergeApproved)
 	http.HandleFunc("/merge_accepted", bot.mergeAccepted)
 	http.ListenAndServe(":8080", nil)
 }
@@ -57,25 +59,36 @@ func getConfig() (Config, error) {
 }
 
 func (bot Bot) mergeCreated(w http.ResponseWriter, r *http.Request) {
-	bot.sendUpdate("New PR created! \n")
 	decoder := json.NewDecoder(r.Body)
 	var pr bitbucket.PullRequestCreatedPayload
 	err := decoder.Decode(&pr)
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	logrus.Infof("Full Info: %v", pr)
-	text := fmt.Sprintf("There is a new pull request in %v created by %v! Please, click [here](%v) to view details!", pr.Repository.FullName, pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href)
+	text := fmt.Sprintf("Пользователь %s создал пул реквест! [Посмотреть](%v)", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href)
 	bot.sendUpdate(text)
+}
 
-	prDetails := "Pull Request data: \n"
-	prDetails += fmt.Sprintf("title: %v \n", pr.PullRequest.Title)
-	prDetails += fmt.Sprintf("description: %v \n", pr.PullRequest.Description)
-	prDetails += fmt.Sprintf("from %v to %v \n", pr.PullRequest.Source.Branch.Name, pr.PullRequest.Destination.Branch.Name)
-	prDetails += fmt.Sprintf("Reviews needed from: %v \n", pr.PullRequest.Reviewers)
+func (bot Bot) mergeCommented(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+	var pr bitbucket.PullRequestCommentCreatedPayload
+	err := decoder.Decode(&pr)
+	if err != nil {
+		logrus.Errorf("Decode failed: %v", err)
+	}
+	text := fmt.Sprintf("%s написал комментарий к пул реквесту (%v). [Посмотреть](%v)", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href, pr.Comment.Links.HTML.Href)
+	bot.sendUpdate(text)
+}
 
-	bot.sendUpdate(prDetails)
-
+func (bot Bot) mergeApproved(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+	var pr bitbucket.PullRequestApprovedPayload
+	err := decoder.Decode(&pr)
+	if err != nil {
+		logrus.Errorf("Decode failed: %v", err)
+	}
+	text := fmt.Sprintf("Пул реквест был одобрен %v! [Посмотреть](%v)", pr.Approval.User.DisplayName, pr.PullRequest.Links.HTML.Href)
+	bot.sendUpdate(text)
 }
 
 func (bot Bot) mergeAccepted(w http.ResponseWriter, r *http.Request) {
@@ -86,8 +99,8 @@ func (bot Bot) mergeAccepted(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	logrus.Infof("Full Info: %v", pr)
-	bot.sendUpdate(pr.PullRequest.Title)
+	text := fmt.Sprintf("Пул реквест был мержнут пользователем %v! [Посмотреть](%v)", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href)
+	bot.sendUpdate(text)
 }
 
 func (bot Bot) sendUpdate(text string) {
