@@ -92,7 +92,6 @@ func (bot Bot) mergeApproved(w http.ResponseWriter, r *http.Request) {
 }
 
 func (bot Bot) mergeAccepted(w http.ResponseWriter, r *http.Request) {
-	bot.sendUpdate("PR merged! \n")
 	decoder := json.NewDecoder(r.Body)
 	var pr bitbucket.PullRequestMergedPayload
 	err := decoder.Decode(&pr)
@@ -105,5 +104,6 @@ func (bot Bot) mergeAccepted(w http.ResponseWriter, r *http.Request) {
 
 func (bot Bot) sendUpdate(text string) {
 	m := tgbotapi.NewMessage(bot.c.Chat, text)
+	m.DisableWebPagePreview = true
 	bot.API.Send(m)
 }
