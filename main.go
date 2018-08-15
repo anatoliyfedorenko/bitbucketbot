@@ -42,6 +42,8 @@ func main() {
 
 	log.Printf("Authorized on account %s", bot.API.Self.UserName)
 
+	bot.sendUpdate("Здравствуйте! Я отслеживаю ваш репозиторий на Bitbucket.org")
+
 	http.HandleFunc("/merge_created", bot.mergeCreated)
 	http.HandleFunc("/merge_commented", bot.mergeCommented)
 	http.HandleFunc("/merge_approved", bot.mergeApproved)
