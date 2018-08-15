@@ -65,7 +65,7 @@ func (bot Bot) mergeCreated(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	text := fmt.Sprintf("Пользователь %s создал пул реквест! [Посмотреть](%v)", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href)
+	text := fmt.Sprintf("Пользователь %s создал пул реквест! Посмотреть => %v", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href)
 	bot.sendUpdate(text)
 }
 
@@ -76,7 +76,7 @@ func (bot Bot) mergeCommented(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	text := fmt.Sprintf("%s написал комментарий к пул реквесту (%v). [Посмотреть](%v)", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href, pr.Comment.Links.HTML.Href)
+	text := fmt.Sprintf("%s написал комментарий к пул реквесту (%v). Посмотреть => %v", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href, pr.Comment.Links.HTML.Href)
 	bot.sendUpdate(text)
 }
 
@@ -87,23 +87,23 @@ func (bot Bot) mergeApproved(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	text := fmt.Sprintf("Пул реквест был одобрен %v! [Посмотреть](%v)", pr.Approval.User.DisplayName, pr.PullRequest.Links.HTML.Href)
+	text := fmt.Sprintf("Пул реквест был одобрен %v! Посмотреть => %v", pr.Approval.User.DisplayName, pr.PullRequest.Links.HTML.Href)
 	bot.sendUpdate(text)
 }
 
 func (bot Bot) mergeAccepted(w http.ResponseWriter, r *http.Request) {
-	bot.sendUpdate("PR merged! \n")
 	decoder := json.NewDecoder(r.Body)
 	var pr bitbucket.PullRequestMergedPayload
 	err := decoder.Decode(&pr)
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	text := fmt.Sprintf("Пул реквест был мержнут пользователем %v! [Посмотреть](%v)", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href)
+	text := fmt.Sprintf("Пул реквест был мержнут пользователем %v! Посмотреть => %v", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href)
 	bot.sendUpdate(text)
 }
 
 func (bot Bot) sendUpdate(text string) {
 	m := tgbotapi.NewMessage(bot.c.Chat, text)
+	m.DisableWebPagePreview = true
 	bot.API.Send(m)
 }
