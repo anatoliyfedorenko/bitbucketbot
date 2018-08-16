@@ -14,7 +14,8 @@ func NewMessage(chatID int64, text string) MessageConfig {
 			ChatID:           chatID,
 			ReplyToMessageID: 0,
 		},
-		Text: text,
+		Text:                  text,
+		ParseMode:             "Markdown",
 		DisableWebPagePreview: false,
 	}
 }

@@ -41,6 +41,7 @@ func main() {
 	bot.c = conf
 
 	log.Printf("Authorized on account %s", bot.API.Self.UserName)
+	log.Printf("Send messages to chat: %v", conf.Chat)
 
 	http.HandleFunc("/pull_request_created", bot.pullRequestCreated)
 	http.HandleFunc("/pull_request_commented", bot.pullRequestCommented)
@@ -66,7 +67,7 @@ func (bot Bot) pullRequestCreated(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	text := fmt.Sprintf("Пользователь %s создал пул реквест! Посмотреть => %v", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href)
+	text := fmt.Sprintf("Пользователь %s создал пул реквест! [Посмотреть](%v)", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href)
 	log.Println(text)
 	bot.sendUpdate(text)
 }
@@ -79,7 +80,7 @@ func (bot Bot) pullRequestCommented(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	text := fmt.Sprintf("%s написал комментарий к пул реквесту (%v). Посмотреть => %v", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href, pr.Comment.Links.HTML.Href)
+	text := fmt.Sprintf("%s написал комментарий к пул реквесту [%v](%v) : %v.", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href, pr.PullRequest.Title, pr.Comment.Content.Markup)
 	log.Println(text)
 	bot.sendUpdate(text)
 }
@@ -92,7 +93,7 @@ func (bot Bot) pullRequestApproved(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	text := fmt.Sprintf("Пул реквест был одобрен %v! Посмотреть => %v", pr.Approval.User.DisplayName, pr.PullRequest.Links.HTML.Href)
+	text := fmt.Sprintf("Пул реквест %v был одобрен %v! [Посмотреть](%v)", pr.PullRequest.Title, pr.Approval.User.DisplayName, pr.PullRequest.Links.HTML.Href)
 	log.Println(text)
 	bot.sendUpdate(text)
 }
@@ -105,7 +106,7 @@ func (bot Bot) pullRequestMerged(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	text := fmt.Sprintf("Пул реквест был мержнут пользователем %v! Посмотреть => %v", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href)
+	text := fmt.Sprintf("Пул реквест был мержнут пользователем %v! [Посмотреть](%v)", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href)
 	log.Println(text)
 	bot.sendUpdate(text)
 }

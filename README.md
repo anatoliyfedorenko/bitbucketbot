@@ -42,17 +42,17 @@ set +a
 
 | Title | URL | 
 | --- | --- |
-| PR Created | <адресСервераСБотом>/pull_request_created | 
-| PR Commented | <адресСервераСБотом>/pull_request_commented |
-| PR Approved | <адресСервераСБотом>/pull_request_approved | 
-| PR Merged | <адресСервераСБотом>/pull_request_merged | 
+| PR Created | <адресСервераСБотом>:порт/pull_request_created | 
+| PR Commented | <адресСервераСБотом>:порт/pull_request_commented |
+| PR Approved | <адресСервераСБотом>:порт/pull_request_approved | 
+| PR Merged | <адресСервераСБотом>:порт/pull_request_merged | 
 
 ### Шаг 4 Запустить бота 
 
 Выполните команду ```make build``` 
 Затем ```make build_docker```
 
-И наконец запустите контенер командой ```docker run -d bitbucketbot```
+И наконец запустите контенер командой ```docker run -d -p порт:порт bitbucketbot```
 Если докер не видит ваши переменные окружения, передайте их внутрь контенера флагами ```-e```
 
 Попробуйте отправить ПР в ваш репозиторий и получить оповещение об этом от бота! 
