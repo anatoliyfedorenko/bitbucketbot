@@ -83,7 +83,6 @@ func (bot Bot) pullRequestCommented(w http.ResponseWriter, r *http.Request) {
 	log.Println(text)
 	bot.sendUpdate(text)
 }
-log.Println("PR Merged!")
 
 func (bot Bot) pullRequestApproved(w http.ResponseWriter, r *http.Request) {
 	log.Println("PR Approved!")
@@ -101,7 +100,7 @@ func (bot Bot) pullRequestApproved(w http.ResponseWriter, r *http.Request) {
 func (bot Bot) pullRequestMerged(w http.ResponseWriter, r *http.Request) {
 	log.Println("PR Merged!")
 	decoder := json.NewDecoder(r.Body)
-	var pr bitbucket.PullRequestpullRequestdPayload
+	var pr bitbucket.PullRequestMergedPayload
 	err := decoder.Decode(&pr)
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
