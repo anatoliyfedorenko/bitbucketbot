@@ -42,12 +42,10 @@ func main() {
 
 	log.Printf("Authorized on account %s", bot.API.Self.UserName)
 
-	bot.sendUpdate("Здравствуйте! Я отслеживаю ваш репозиторий на Bitbucket.org")
-
-	http.HandleFunc("/merge_created", bot.mergeCreated)
-	http.HandleFunc("/merge_commented", bot.mergeCommented)
-	http.HandleFunc("/merge_approved", bot.mergeApproved)
-	http.HandleFunc("/merge_accepted", bot.mergeAccepted)
+	http.HandleFunc("/pull_request_created", bot.pullRequestCreated)
+	http.HandleFunc("/pull_request_commented", bot.pullRequestCommented)
+	http.HandleFunc("/pull_request_approved", bot.pullRequestApproved)
+	http.HandleFunc("/pull_request_merged", bot.pullRequestMerged)
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -60,7 +58,8 @@ func getConfig() (Config, error) {
 	return c, nil
 }
 
-func (bot Bot) mergeCreated(w http.ResponseWriter, r *http.Request) {
+func (bot Bot) pullRequestCreated(w http.ResponseWriter, r *http.Request) {
+	log.Println("PR Created!")
 	decoder := json.NewDecoder(r.Body)
 	var pr bitbucket.PullRequestCreatedPayload
 	err := decoder.Decode(&pr)
@@ -68,10 +67,12 @@ func (bot Bot) mergeCreated(w http.ResponseWriter, r *http.Request) {
 		logrus.Errorf("Decode failed: %v", err)
 	}
 	text := fmt.Sprintf("Пользователь %s создал пул реквест! Посмотреть => %v", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href)
+	log.Println(text)
 	bot.sendUpdate(text)
 }
 
-func (bot Bot) mergeCommented(w http.ResponseWriter, r *http.Request) {
+func (bot Bot) pullRequestCommented(w http.ResponseWriter, r *http.Request) {
+	log.Println("PR Commented!")
 	decoder := json.NewDecoder(r.Body)
 	var pr bitbucket.PullRequestCommentCreatedPayload
 	err := decoder.Decode(&pr)
@@ -79,10 +80,13 @@ func (bot Bot) mergeCommented(w http.ResponseWriter, r *http.Request) {
 		logrus.Errorf("Decode failed: %v", err)
 	}
 	text := fmt.Sprintf("%s написал комментарий к пул реквесту (%v). Посмотреть => %v", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href, pr.Comment.Links.HTML.Href)
+	log.Println(text)
 	bot.sendUpdate(text)
 }
+log.Println("PR Merged!")
 
-func (bot Bot) mergeApproved(w http.ResponseWriter, r *http.Request) {
+func (bot Bot) pullRequestApproved(w http.ResponseWriter, r *http.Request) {
+	log.Println("PR Approved!")
 	decoder := json.NewDecoder(r.Body)
 	var pr bitbucket.PullRequestApprovedPayload
 	err := decoder.Decode(&pr)
@@ -90,17 +94,20 @@ func (bot Bot) mergeApproved(w http.ResponseWriter, r *http.Request) {
 		logrus.Errorf("Decode failed: %v", err)
 	}
 	text := fmt.Sprintf("Пул реквест был одобрен %v! Посмотреть => %v", pr.Approval.User.DisplayName, pr.PullRequest.Links.HTML.Href)
+	log.Println(text)
 	bot.sendUpdate(text)
 }
 
-func (bot Bot) mergeAccepted(w http.ResponseWriter, r *http.Request) {
+func (bot Bot) pullRequestMerged(w http.ResponseWriter, r *http.Request) {
+	log.Println("PR Merged!")
 	decoder := json.NewDecoder(r.Body)
-	var pr bitbucket.PullRequestMergedPayload
+	var pr bitbucket.PullRequestpullRequestdPayload
 	err := decoder.Decode(&pr)
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
 	text := fmt.Sprintf("Пул реквест был мержнут пользователем %v! Посмотреть => %v", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href)
+	log.Println(text)
 	bot.sendUpdate(text)
 }
 
@@ -108,4 +115,5 @@ func (bot Bot) sendUpdate(text string) {
 	m := tgbotapi.NewMessage(bot.c.Chat, text)
 	m.DisableWebPagePreview = true
 	bot.API.Send(m)
+	log.Println("Message Send!")
 }
