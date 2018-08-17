@@ -3,9 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 
+	"github.com/gen1us2k/go-translit"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/go-playground/webhooks.v3/bitbucket"
@@ -35,13 +35,13 @@ func main() {
 	bot := &Bot{}
 	b, err := tgbotapi.NewBotAPI(conf.TelegramToken)
 	if err != nil {
-		log.Fatal(err)
+		logrus.Fatal(err)
 	}
 	bot.API = b
 	bot.c = conf
 
-	log.Printf("Authorized on account %s", bot.API.Self.UserName)
-	log.Printf("Send messages to chat: %v", conf.Chat)
+	logrus.Printf("Authorized on account %s", bot.API.Self.UserName)
+	logrus.Printf("Configure to send messages to chat: %v", conf.Chat)
 
 	http.HandleFunc("/pull_request_created", bot.pullRequestCreated)
 	http.HandleFunc("/pull_request_commented", bot.pullRequestCommented)
@@ -60,54 +60,54 @@ func getConfig() (Config, error) {
 }
 
 func (bot Bot) pullRequestCreated(w http.ResponseWriter, r *http.Request) {
-	log.Println("PR Created!")
+	logrus.Println("PR Created!")
 	decoder := json.NewDecoder(r.Body)
 	var pr bitbucket.PullRequestCreatedPayload
 	err := decoder.Decode(&pr)
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	text := fmt.Sprintf("Пользователь %s создал пул реквест! [Посмотреть](%v)", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href)
-	log.Println(text)
+	text := fmt.Sprintf("%s создал пул реквест: [%v](%v)", translit.Translit(pr.Actor.DisplayName), pr.PullRequest.Title, pr.PullRequest.Links.HTML.Href)
+	logrus.Println(text)
 	bot.sendUpdate(text)
 }
 
 func (bot Bot) pullRequestCommented(w http.ResponseWriter, r *http.Request) {
-	log.Println("PR Commented!")
+	logrus.Println("PR Commented!")
 	decoder := json.NewDecoder(r.Body)
 	var pr bitbucket.PullRequestCommentCreatedPayload
 	err := decoder.Decode(&pr)
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	text := fmt.Sprintf("%s написал комментарий к пул реквесту [%v](%v) : %v.", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href, pr.PullRequest.Title, pr.Comment.Content.Markup)
-	log.Println(text)
+	text := fmt.Sprintf(`%s написал комментарий к пул реквесту "[%v](%v)" : %v.`, translit.Translit(pr.Actor.DisplayName), pr.PullRequest.Title, pr.PullRequest.Links.HTML.Href, pr.Comment.Content.Markup)
+	logrus.Println(text)
 	bot.sendUpdate(text)
 }
 
 func (bot Bot) pullRequestApproved(w http.ResponseWriter, r *http.Request) {
-	log.Println("PR Approved!")
+	logrus.Println("PR Approved!")
 	decoder := json.NewDecoder(r.Body)
 	var pr bitbucket.PullRequestApprovedPayload
 	err := decoder.Decode(&pr)
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	text := fmt.Sprintf("Пул реквест %v был одобрен %v! [Посмотреть](%v)", pr.PullRequest.Title, pr.Approval.User.DisplayName, pr.PullRequest.Links.HTML.Href)
-	log.Println(text)
+	text := fmt.Sprintf(`%v одобрил ПР "[%v](%v)"`, translit.Translit(pr.Approval.User.DisplayName), pr.PullRequest.Title, pr.PullRequest.Links.HTML.Href)
+	logrus.Println(text)
 	bot.sendUpdate(text)
 }
 
 func (bot Bot) pullRequestMerged(w http.ResponseWriter, r *http.Request) {
-	log.Println("PR Merged!")
+	logrus.Println("PR Merged!")
 	decoder := json.NewDecoder(r.Body)
 	var pr bitbucket.PullRequestMergedPayload
 	err := decoder.Decode(&pr)
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	text := fmt.Sprintf("Пул реквест был мержнут пользователем %v! [Посмотреть](%v)", pr.Actor.DisplayName, pr.PullRequest.Links.HTML.Href)
-	log.Println(text)
+	text := fmt.Sprintf(`%v смержил ПР "[%](%v)" в ветку %v`, translit.Translit(pr.Actor.DisplayName), pr.PullRequest.Title, pr.PullRequest.Links.HTML.Href, pr.PullRequest.Destination.Branch.Name)
+	logrus.Println(text)
 	bot.sendUpdate(text)
 }
 
@@ -115,5 +115,5 @@ func (bot Bot) sendUpdate(text string) {
 	m := tgbotapi.NewMessage(bot.c.Chat, text)
 	m.DisableWebPagePreview = true
 	bot.API.Send(m)
-	log.Println("Message Send!")
+	logrus.Println("Message Send!")
 }

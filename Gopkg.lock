@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  branch = "master"
+  digest = "1:df50e185fd4c4d6d767b559e8e8133d09271418595e36a2e48b26379e47774f3"
+  name = "github.com/gen1us2k/go-translit"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "46f1a0be552caadbdbc19cf9a6705c4402b7ab47"
+
+[[projects]]
   digest = "1:edbef42561faa44c19129b68d1e109fbc1647f63239250391eadc8d0e7c9f669"
   name = "github.com/kelseyhightower/envconfig"
   packages = ["."]
@@ -67,6 +75,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/gen1us2k/go-translit",
     "github.com/kelseyhightower/envconfig",
     "github.com/sirupsen/logrus",
     "gopkg.in/go-playground/webhooks.v3/bitbucket",
