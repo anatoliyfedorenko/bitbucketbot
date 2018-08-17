@@ -42,6 +42,7 @@ func main() {
 
 	logrus.Printf("Authorized on account %s", bot.API.Self.UserName)
 	logrus.Printf("Configure to send messages to chat: %v", conf.Chat)
+	logrus.Printf("Translit chek: %v", translit.Translit("Andrew"))
 
 	http.HandleFunc("/pull_request_created", bot.pullRequestCreated)
 	http.HandleFunc("/pull_request_commented", bot.pullRequestCommented)
@@ -67,7 +68,7 @@ func (bot Bot) pullRequestCreated(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	text := fmt.Sprintf("%s создал пул реквест: [%v](%v)", translit.Translit(pr.Actor.DisplayName), pr.PullRequest.Title, pr.PullRequest.Links.HTML.Href)
+	text := fmt.Sprintf(`%s создал пул реквест [#%v](%v): "%v"`, translit.Translit(pr.Actor.DisplayName), pr.PullRequest.ID, pr.PullRequest.Links.HTML.Href, pr.PullRequest.Title)
 	logrus.Println(text)
 	bot.sendUpdate(text)
 }
@@ -80,7 +81,7 @@ func (bot Bot) pullRequestCommented(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	text := fmt.Sprintf(`%s написал комментарий к пул реквесту "[%v](%v)" : %v.`, translit.Translit(pr.Actor.DisplayName), pr.PullRequest.Title, pr.PullRequest.Links.HTML.Href, pr.Comment.Content.Markup)
+	text := fmt.Sprintf(`%s написал комментарий к пул реквесту [#%v](%v): "%v".`, translit.Translit(pr.Actor.DisplayName), pr.PullRequest.ID, pr.PullRequest.Links.HTML.Href, pr.Comment.Content.Markup)
 	logrus.Println(text)
 	bot.sendUpdate(text)
 }
@@ -93,7 +94,7 @@ func (bot Bot) pullRequestApproved(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	text := fmt.Sprintf(`%v одобрил ПР "[%v](%v)"`, translit.Translit(pr.Approval.User.DisplayName), pr.PullRequest.Title, pr.PullRequest.Links.HTML.Href)
+	text := fmt.Sprintf("%v одобрил пул реквест [#%v](%v)", translit.Translit(pr.Approval.User.DisplayName), pr.PullRequest.ID, pr.PullRequest.Links.HTML.Href)
 	logrus.Println(text)
 	bot.sendUpdate(text)
 }
@@ -106,7 +107,7 @@ func (bot Bot) pullRequestMerged(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	text := fmt.Sprintf(`%v смержил ПР "[%](%v)" в ветку %v`, translit.Translit(pr.Actor.DisplayName), pr.PullRequest.Title, pr.PullRequest.Links.HTML.Href, pr.PullRequest.Destination.Branch.Name)
+	text := fmt.Sprintf("%v смержил пул реквест [#%v](%v) в ветку %v", translit.Translit(pr.Actor.DisplayName), pr.PullRequest.ID, pr.PullRequest.Links.HTML.Href, pr.PullRequest.Destination.Branch.Name)
 	logrus.Println(text)
 	bot.sendUpdate(text)
 }
