@@ -50,9 +50,10 @@ func (bot *Bot) PullRequestCreated(w http.ResponseWriter, r *http.Request) {
 	}
 	text := fmt.Sprintf("%s создал пул реквест [#%v](%v): %v", pr.Actor.DisplayName, pr.PullRequest.ID, pr.PullRequest.Links.HTML.Href, pr.PullRequest.Title)
 	logrus.Println(text)
-	if pr.Actor.DisplayName != "" && pr.PullRequest.ID != 0 && pr.PullRequest.Links.HTML.Href == "" && pr.PullRequest.Title != "" {
+	if (pr.Actor.DisplayName != "") && (pr.PullRequest.ID != 0) && (pr.PullRequest.Links.HTML.Href != "") && (pr.PullRequest.Title != "") {
 		bot.SendUpdate(text)
 	}
+
 }
 
 //PullRequestCommented handles PR Commented Webhook POST requests
@@ -64,11 +65,12 @@ func (bot *Bot) PullRequestCommented(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	text := fmt.Sprintf("%s написал комментарий к пул реквесту [#%v](%v): %v.", pr.Actor.DisplayName, pr.PullRequest.ID, pr.PullRequest.Links.HTML.Href, pr.Comment.Content.HTML)
+	text := fmt.Sprintf("%s написал комментарий к пул реквесту [#%v](%v): %v.", pr.Actor.DisplayName, pr.PullRequest.ID, pr.PullRequest.Links.HTML.Href, pr.Comment.Content.Markup)
 	logrus.Println(text)
-	if pr.Actor.DisplayName != "" && pr.PullRequest.ID != 0 && pr.PullRequest.Links.HTML.Href == "" && pr.Comment.Content.HTML != "" {
+	if pr.Actor.DisplayName != "" && pr.PullRequest.ID != 0 && pr.PullRequest.Links.HTML.Href != "" && pr.Comment.Content.HTML != "" {
 		bot.SendUpdate(text)
 	}
+
 }
 
 //PullRequestApproved handles PR Approved Webhook POST requests
@@ -82,9 +84,10 @@ func (bot *Bot) PullRequestApproved(w http.ResponseWriter, r *http.Request) {
 	}
 	text := fmt.Sprintf("%v одобрил пул реквест [#%v](%v)", pr.Approval.User.DisplayName, pr.PullRequest.ID, pr.PullRequest.Links.HTML.Href)
 	logrus.Println(text)
-	if pr.Approval.User.DisplayName != "" && pr.PullRequest.ID != 0 && pr.PullRequest.Links.HTML.Href == "" {
+	if pr.Approval.User.DisplayName != "" && pr.PullRequest.ID != 0 && pr.PullRequest.Links.HTML.Href != "" {
 		bot.SendUpdate(text)
 	}
+
 }
 
 //PullRequestMerged handles PR Merged Webhook POST requests
@@ -98,7 +101,7 @@ func (bot *Bot) PullRequestMerged(w http.ResponseWriter, r *http.Request) {
 	}
 	text := fmt.Sprintf("%v смержил пул реквест [#%v](%v) в ветку %v", pr.Actor.DisplayName, pr.PullRequest.ID, pr.PullRequest.Links.HTML.Href, pr.PullRequest.Destination.Branch.Name)
 	logrus.Println(text)
-	if pr.Actor.DisplayName != "" && pr.PullRequest.ID != 0 && pr.PullRequest.Links.HTML.Href == "" && pr.PullRequest.Destination.Branch.Name != "" {
+	if pr.Actor.DisplayName != "" && pr.PullRequest.ID != 0 && pr.PullRequest.Links.HTML.Href != "" && pr.PullRequest.Destination.Branch.Name != "" {
 		bot.SendUpdate(text)
 	}
 
