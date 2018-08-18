@@ -39,71 +39,74 @@ func TestSendUpdate(t *testing.T) {
 	bot.SendUpdate("test")
 }
 
-func TestPullRequestCreated(t *testing.T) {
+func TestPullRequestsSucceed(t *testing.T) {
 	bot := setupTestBot(t)
 
-	reader, err := os.Open("prcreated.json")
-	assert.NoError(t, err)
-
-	req, err := http.NewRequest("POST", "/pull_request_created", reader)
-	if err != nil {
-		t.Fatal(err)
+	var testCases = []struct {
+		title string
+		file  string
+		link  string
+	}{
+		{"PR Created", "prcreated.json", "/pull_request_created"},
+		{"PR Commented", "prcommented.json", "/pull_request_commented"},
+		{"PR Approved", "prapproved.json", "/pull_request_approved"},
+		{"PR Merged", "prmerged.json", "/pull_request_merged"},
 	}
 
-	// We create a ResponseRecorder (which satisfies http.ResponseWriter) to record the response.
-	rr := httptest.NewRecorder()
-	bot.PullRequestCreated(rr, req)
-
+	for _, tt := range testCases {
+		reader, err := os.Open(tt.file)
+		assert.NoError(t, err)
+		req, err := http.NewRequest("POST", tt.link, reader)
+		if err != nil {
+			t.Error(err)
+		}
+		rr := httptest.NewRecorder()
+		switch tt.title {
+		case "PR Created":
+			bot.PullRequestCreated(rr, req)
+		case "PR Commented":
+			bot.PullRequestCommented(rr, req)
+		case "PR Approved":
+			bot.PullRequestApproved(rr, req)
+		case "PR Merged":
+			bot.PullRequestMerged(rr, req)
+		}
+	}
 }
 
-func TestPullRequestMerged(t *testing.T) {
+func TestPullRequestsFail(t *testing.T) {
 	bot := setupTestBot(t)
 
-	reader, err := os.Open("prmerged.json")
-	assert.NoError(t, err)
-
-	req, err := http.NewRequest("POST", "/pull_request_merged", reader)
-	if err != nil {
-		t.Fatal(err)
+	var testCases = []struct {
+		title string
+		file  string
+		link  string
+	}{
+		{"PR Created", "", "/pull_request_created"},
+		{"PR Commented", "", "/pull_request_commented"},
+		{"PR Approved", "", "/pull_request_approved"},
+		{"PR Merged", "", "/pull_request_merged"},
 	}
 
-	// We create a ResponseRecorder (which satisfies http.ResponseWriter) to record the response.
-	rr := httptest.NewRecorder()
-	bot.PullRequestMerged(rr, req)
-
-}
-
-func TestPullRequestCommented(t *testing.T) {
-	bot := setupTestBot(t)
-
-	reader, err := os.Open("prcommented.json")
-	assert.NoError(t, err)
-
-	req, err := http.NewRequest("POST", "/pull_request_commented", reader)
-	if err != nil {
-		t.Fatal(err)
+	for _, tt := range testCases {
+		reader, err := os.Open(tt.file)
+		assert.Error(t, err)
+		req, err := http.NewRequest("POST", tt.link, reader)
+		if err != nil {
+			t.Error(err)
+		}
+		rr := httptest.NewRecorder()
+		switch tt.title {
+		case "PR Created":
+			bot.PullRequestCreated(rr, req)
+		case "PR Commented":
+			bot.PullRequestCommented(rr, req)
+		case "PR Approved":
+			bot.PullRequestApproved(rr, req)
+		case "PR Merged":
+			bot.PullRequestMerged(rr, req)
+		}
 	}
-
-	// We create a ResponseRecorder (which satisfies http.ResponseWriter) to record the response.
-	rr := httptest.NewRecorder()
-	bot.PullRequestCommented(rr, req)
-
-}
-
-func TestPullRequestApproved(t *testing.T) {
-	bot := setupTestBot(t)
-
-	reader, err := os.Open("prapproved.json")
-	assert.NoError(t, err)
-
-	req, err := http.NewRequest("POST", "/pull_request_approved", reader)
-	if err != nil {
-		t.Fatal(err)
-	}
-	// We create a ResponseRecorder (which satisfies http.ResponseWriter) to record the response.
-	rr := httptest.NewRecorder()
-	bot.PullRequestApproved(rr, req)
-
 }
 
 func setupTestBot(t *testing.T) *Bot {

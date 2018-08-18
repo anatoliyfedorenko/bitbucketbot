@@ -40,7 +40,7 @@ func (bot *Bot) SendUpdate(text string) {
 }
 
 //PullRequestCreated handles PR Created Webhook POST requests
-func (bot Bot) PullRequestCreated(w http.ResponseWriter, r *http.Request) {
+func (bot *Bot) PullRequestCreated(w http.ResponseWriter, r *http.Request) {
 	logrus.Println("PR Created!")
 	decoder := json.NewDecoder(r.Body)
 	var pr bitbucket.PullRequestCreatedPayload
@@ -50,11 +50,13 @@ func (bot Bot) PullRequestCreated(w http.ResponseWriter, r *http.Request) {
 	}
 	text := fmt.Sprintf("%s создал пул реквест [#%v](%v): %v", pr.Actor.DisplayName, pr.PullRequest.ID, pr.PullRequest.Links.HTML.Href, pr.PullRequest.Title)
 	logrus.Println(text)
-	bot.SendUpdate(text)
+	if pr.Actor.DisplayName != "" && pr.PullRequest.ID != 0 && pr.PullRequest.Links.HTML.Href == "" && pr.PullRequest.Title != "" {
+		bot.SendUpdate(text)
+	}
 }
 
 //PullRequestCommented handles PR Commented Webhook POST requests
-func (bot Bot) PullRequestCommented(w http.ResponseWriter, r *http.Request) {
+func (bot *Bot) PullRequestCommented(w http.ResponseWriter, r *http.Request) {
 	logrus.Println("PR Commented!")
 	decoder := json.NewDecoder(r.Body)
 	var pr bitbucket.PullRequestCommentCreatedPayload
@@ -62,13 +64,15 @@ func (bot Bot) PullRequestCommented(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	text := fmt.Sprintf("%s написал комментарий к пул реквесту [#%v](%v): %v.", pr.Actor.DisplayName, pr.PullRequest.ID, pr.PullRequest.Links.HTML.Href, pr.Comment.Content.Raw)
+	text := fmt.Sprintf("%s написал комментарий к пул реквесту [#%v](%v): %v.", pr.Actor.DisplayName, pr.PullRequest.ID, pr.PullRequest.Links.HTML.Href, pr.Comment.Content.HTML)
 	logrus.Println(text)
-	bot.SendUpdate(text)
+	if pr.Actor.DisplayName != "" && pr.PullRequest.ID != 0 && pr.PullRequest.Links.HTML.Href == "" && pr.Comment.Content.HTML != "" {
+		bot.SendUpdate(text)
+	}
 }
 
 //PullRequestApproved handles PR Approved Webhook POST requests
-func (bot Bot) PullRequestApproved(w http.ResponseWriter, r *http.Request) {
+func (bot *Bot) PullRequestApproved(w http.ResponseWriter, r *http.Request) {
 	logrus.Println("PR Approved!")
 	decoder := json.NewDecoder(r.Body)
 	var pr bitbucket.PullRequestApprovedPayload
@@ -78,11 +82,13 @@ func (bot Bot) PullRequestApproved(w http.ResponseWriter, r *http.Request) {
 	}
 	text := fmt.Sprintf("%v одобрил пул реквест [#%v](%v)", pr.Approval.User.DisplayName, pr.PullRequest.ID, pr.PullRequest.Links.HTML.Href)
 	logrus.Println(text)
-	bot.SendUpdate(text)
+	if pr.Approval.User.DisplayName != "" && pr.PullRequest.ID != 0 && pr.PullRequest.Links.HTML.Href == "" {
+		bot.SendUpdate(text)
+	}
 }
 
 //PullRequestMerged handles PR Merged Webhook POST requests
-func (bot Bot) PullRequestMerged(w http.ResponseWriter, r *http.Request) {
+func (bot *Bot) PullRequestMerged(w http.ResponseWriter, r *http.Request) {
 	logrus.Println("PR Merged!")
 	decoder := json.NewDecoder(r.Body)
 	var pr bitbucket.PullRequestMergedPayload
@@ -92,5 +98,8 @@ func (bot Bot) PullRequestMerged(w http.ResponseWriter, r *http.Request) {
 	}
 	text := fmt.Sprintf("%v смержил пул реквест [#%v](%v) в ветку %v", pr.Actor.DisplayName, pr.PullRequest.ID, pr.PullRequest.Links.HTML.Href, pr.PullRequest.Destination.Branch.Name)
 	logrus.Println(text)
-	bot.SendUpdate(text)
+	if pr.Actor.DisplayName != "" && pr.PullRequest.ID != 0 && pr.PullRequest.Links.HTML.Href == "" && pr.PullRequest.Destination.Branch.Name != "" {
+		bot.SendUpdate(text)
+	}
+
 }
