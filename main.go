@@ -3,9 +3,9 @@ package main
 import (
 	"net/http"
 
+	"github.com/anatoliyfedorenko/bitbucketbot/chat"
+	"github.com/anatoliyfedorenko/bitbucketbot/config"
 	"github.com/sirupsen/logrus"
-	"gitlab.com/bitbucketbot/chat"
-	"gitlab.com/bitbucketbot/config"
 )
 
 func main() {

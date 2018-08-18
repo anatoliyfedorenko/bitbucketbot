@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/anatoliyfedorenko/bitbucketbot/config"
 	"github.com/sirupsen/logrus"
-	"gitlab.com/bitbucketbot/config"
 	"gopkg.in/go-playground/webhooks.v3/bitbucket"
 	"gopkg.in/telegram-bot-api.v4"
 )
