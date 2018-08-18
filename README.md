@@ -1,6 +1,8 @@
 # Телеграм Бот для Bitbucket 
 
-Данный бот отслеживает активность в организации битбакета и отправляет сообщения о пул реквестах, комментариях, апрувах и мержах в телеграм чат проекта
+Данный бот отслеживает активность в организации битбакета и отправляет сообщения о пул реквестах, комментариях, апрувах и мержах в телеграм чат проекта 
+
+[![Build Status](https://travis-ci.org/anatoliyfedorenko/bitbucketbot.svg?branch=master)](https://travis-ci.org/anatoliyfedorenko/bitbucketbot) [![Go Report Card](https://goreportcard.com/badge/github.com/anatoliyfedorenko/bitbucketbot)](https://goreportcard.com/report/github.com/anatoliyfedorenko/bitbucketbot) [![Coverage Status](https://coveralls.io/repos/github/anatoliyfedorenko/bitbucketbot/badge.svg)](https://coveralls.io/github/anatoliyfedorenko/bitbucketbot)
 
 ## Инструкция по установке:
 
