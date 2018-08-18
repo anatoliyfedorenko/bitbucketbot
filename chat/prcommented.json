@@ -1,0 +1,276 @@
+{
+  "comment": {
+    "links": {
+      "self": {
+        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/20/comments/73340870"
+      },
+      "html": {
+        "href": "https://bitbucket.org/anatoliy_fedorenko/bottest/pull-requests/20/_/diff#comment-73340870"
+      }
+    },
+    "deleted": false,
+    "pullrequest": {
+      "type": "pullrequest",
+      "id": 20,
+      "links": {
+        "self": {
+          "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/20"
+        },
+        "html": {
+          "href": "https://bitbucket.org/anatoliy_fedorenko/bottest/pull-requests/20"
+        }
+      },
+      "title": "Divide project into packages, add tests"
+    },
+    "content": {
+      "raw": "test comment",
+      "markup": "markdown",
+      "html": "<p>test comment</p>",
+      "type": "rendered"
+    },
+    "created_on": "2018-08-18T06:24:03.158798+00:00",
+    "user": {
+      "username": "anatoliy_fedorenko",
+      "display_name": "Anatoliy Fedorenko",
+      "account_id": "557058:2103aa90-2bc4-4926-a6c4-794dd82faa86",
+      "links": {
+        "self": {
+          "href": "https://api.bitbucket.org/2.0/users/anatoliy_fedorenko"
+        },
+        "html": {
+          "href": "https://bitbucket.org/anatoliy_fedorenko/"
+        },
+        "avatar": {
+          "href": "https://bitbucket.org/account/anatoliy_fedorenko/avatar/"
+        }
+      },
+      "type": "user",
+      "uuid": "{5b7c1a84-1a5f-4790-96e2-adf2ee640efe}"
+    },
+    "updated_on": "2018-08-18T06:24:03.164874+00:00",
+    "type": "pullrequest_comment",
+    "id": 73340870
+  },
+  "pullrequest": {
+    "merge_commit": null,
+    "description": "",
+    "links": {
+      "decline": {
+        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/20/decline"
+      },
+      "commits": {
+        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/20/commits"
+      },
+      "self": {
+        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/20"
+      },
+      "comments": {
+        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/20/comments"
+      },
+      "merge": {
+        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/20/merge"
+      },
+      "html": {
+        "href": "https://bitbucket.org/anatoliy_fedorenko/bottest/pull-requests/20"
+      },
+      "activity": {
+        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/20/activity"
+      },
+      "diff": {
+        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/20/diff"
+      },
+      "approve": {
+        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/20/approve"
+      },
+      "statuses": {
+        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/20/statuses"
+      }
+    },
+    "title": "Divide project into packages, add tests",
+    "close_source_branch": false,
+    "reviewers": [],
+    "destination": {
+      "commit": {
+        "type": "commit",
+        "hash": "f95ac69ba410",
+        "links": {
+          "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/commit/f95ac69ba410"
+          },
+          "html": {
+            "href": "https://bitbucket.org/anatoliy_fedorenko/bottest/commits/f95ac69ba410"
+          }
+        }
+      },
+      "branch": {
+        "name": "master"
+      },
+      "repository": {
+        "full_name": "anatoliy_fedorenko/bottest",
+        "type": "repository",
+        "name": "bottest",
+        "links": {
+          "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest"
+          },
+          "html": {
+            "href": "https://bitbucket.org/anatoliy_fedorenko/bottest"
+          },
+          "avatar": {
+            "href": "https://bytebucket.org/ravatar/%7B09c8fd9c-3d80-4667-9cae-a939472b1a1f%7D?ts=default"
+          }
+        },
+        "uuid": "{09c8fd9c-3d80-4667-9cae-a939472b1a1f}"
+      }
+    },
+    "comment_count": 1,
+    "closed_by": null,
+    "summary": {
+      "raw": "",
+      "markup": "markdown",
+      "html": "",
+      "type": "rendered"
+    },
+    "source": {
+      "commit": {
+        "type": "commit",
+        "hash": "dbbc7cb536ed",
+        "links": {
+          "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/commit/dbbc7cb536ed"
+          },
+          "html": {
+            "href": "https://bitbucket.org/anatoliy_fedorenko/bottest/commits/dbbc7cb536ed"
+          }
+        }
+      },
+      "branch": {
+        "name": "add_tests"
+      },
+      "repository": {
+        "full_name": "anatoliy_fedorenko/bottest",
+        "type": "repository",
+        "name": "bottest",
+        "links": {
+          "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest"
+          },
+          "html": {
+            "href": "https://bitbucket.org/anatoliy_fedorenko/bottest"
+          },
+          "avatar": {
+            "href": "https://bytebucket.org/ravatar/%7B09c8fd9c-3d80-4667-9cae-a939472b1a1f%7D?ts=default"
+          }
+        },
+        "uuid": "{09c8fd9c-3d80-4667-9cae-a939472b1a1f}"
+      }
+    },
+    "created_on": "2018-08-18T06:23:11.710898+00:00",
+    "state": "OPEN",
+    "task_count": 0,
+    "participants": [
+      {
+        "type": "participant",
+        "user": {
+          "username": "anatoliy_fedorenko",
+          "display_name": "Anatoliy Fedorenko",
+          "account_id": "557058:2103aa90-2bc4-4926-a6c4-794dd82faa86",
+          "links": {
+            "self": {
+              "href": "https://api.bitbucket.org/2.0/users/anatoliy_fedorenko"
+            },
+            "html": {
+              "href": "https://bitbucket.org/anatoliy_fedorenko/"
+            },
+            "avatar": {
+              "href": "https://bitbucket.org/account/anatoliy_fedorenko/avatar/"
+            }
+          },
+          "type": "user",
+          "uuid": "{5b7c1a84-1a5f-4790-96e2-adf2ee640efe}"
+        },
+        "role": "PARTICIPANT",
+        "approved": true,
+        "participated_on": "2018-08-18T06:23:47.118077+00:00"
+      }
+    ],
+    "reason": "",
+    "updated_on": "2018-08-18T06:24:03.270427+00:00",
+    "author": {
+      "username": "anatoliy_fedorenko",
+      "display_name": "Anatoliy Fedorenko",
+      "account_id": "557058:2103aa90-2bc4-4926-a6c4-794dd82faa86",
+      "links": {
+        "self": {
+          "href": "https://api.bitbucket.org/2.0/users/anatoliy_fedorenko"
+        },
+        "html": {
+          "href": "https://bitbucket.org/anatoliy_fedorenko/"
+        },
+        "avatar": {
+          "href": "https://bitbucket.org/account/anatoliy_fedorenko/avatar/"
+        }
+      },
+      "type": "user",
+      "uuid": "{5b7c1a84-1a5f-4790-96e2-adf2ee640efe}"
+    },
+    "type": "pullrequest",
+    "id": 20
+  },
+  "actor": {
+    "username": "anatoliy_fedorenko",
+    "display_name": "Anatoliy Fedorenko",
+    "account_id": "557058:2103aa90-2bc4-4926-a6c4-794dd82faa86",
+    "links": {
+      "self": {
+        "href": "https://api.bitbucket.org/2.0/users/anatoliy_fedorenko"
+      },
+      "html": {
+        "href": "https://bitbucket.org/anatoliy_fedorenko/"
+      },
+      "avatar": {
+        "href": "https://bitbucket.org/account/anatoliy_fedorenko/avatar/"
+      }
+    },
+    "type": "user",
+    "uuid": "{5b7c1a84-1a5f-4790-96e2-adf2ee640efe}"
+  },
+  "repository": {
+    "scm": "git",
+    "website": "",
+    "name": "bottest",
+    "links": {
+      "self": {
+        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest"
+      },
+      "html": {
+        "href": "https://bitbucket.org/anatoliy_fedorenko/bottest"
+      },
+      "avatar": {
+        "href": "https://bytebucket.org/ravatar/%7B09c8fd9c-3d80-4667-9cae-a939472b1a1f%7D?ts=default"
+      }
+    },
+    "full_name": "anatoliy_fedorenko/bottest",
+    "owner": {
+      "username": "anatoliy_fedorenko",
+      "display_name": "Anatoliy Fedorenko",
+      "account_id": "557058:2103aa90-2bc4-4926-a6c4-794dd82faa86",
+      "links": {
+        "self": {
+          "href": "https://api.bitbucket.org/2.0/users/anatoliy_fedorenko"
+        },
+        "html": {
+          "href": "https://bitbucket.org/anatoliy_fedorenko/"
+        },
+        "avatar": {
+          "href": "https://bitbucket.org/account/anatoliy_fedorenko/avatar/"
+        }
+      },
+      "type": "user",
+      "uuid": "{5b7c1a84-1a5f-4790-96e2-adf2ee640efe}"
+    },
+    "type": "repository",
+    "is_private": false,
+    "uuid": "{09c8fd9c-3d80-4667-9cae-a939472b1a1f}"
+  }
+}
