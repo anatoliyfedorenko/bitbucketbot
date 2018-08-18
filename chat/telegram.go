@@ -35,6 +35,7 @@ func NewBot(c config.Config) (*Bot, error) {
 func (bot *Bot) SendUpdate(text string) {
 	m := tgbotapi.NewMessage(bot.config.Chat, text)
 	m.DisableWebPagePreview = true
+	m.ParseMode = "Markdown"
 	bot.API.Send(m)
 	logrus.Println("Message Send!")
 }

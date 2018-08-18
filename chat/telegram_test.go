@@ -12,9 +12,19 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// Just change these constants to test bot in real chat.
+// Make sure you add a bot to the chat
+const BotToken = "testToken"
+const BotChat = "-12345"
+
+func TestSendUpdate(t *testing.T) {
+	bot := setupTestBot(t)
+	bot.SendUpdate("test")
+}
+
 func TestNewBotReturnsError(t *testing.T) {
-	os.Setenv("BOT_TELEGRAM_TOKEN", "testToken")
-	os.Setenv("BOT_CHAT", "-12345")
+	os.Setenv("BOT_TELEGRAM_TOKEN", BotToken)
+	os.Setenv("BOT_CHAT", BotChat)
 	conf, err := config.GetConfig()
 	assert.NoError(t, err)
 	httpmock.Activate()
@@ -32,11 +42,6 @@ func TestNewBotReturnsError(t *testing.T) {
 	_, err = NewBot(conf)
 	assert.Error(t, err)
 	assert.Equal(t, "Not Found", err.Error())
-}
-
-func TestSendUpdate(t *testing.T) {
-	bot := setupTestBot(t)
-	bot.SendUpdate("test")
 }
 
 func TestPullRequestsSucceed(t *testing.T) {
@@ -73,7 +78,6 @@ func TestPullRequestsSucceed(t *testing.T) {
 		}
 	}
 }
-
 func TestPullRequestsFail(t *testing.T) {
 	bot := setupTestBot(t)
 
@@ -110,8 +114,8 @@ func TestPullRequestsFail(t *testing.T) {
 }
 
 func setupTestBot(t *testing.T) *Bot {
-	os.Setenv("BOT_TELEGRAM_TOKEN", "testToken")
-	os.Setenv("BOT_CHAT", "-12345")
+	os.Setenv("BOT_TELEGRAM_TOKEN", BotToken)
+	os.Setenv("BOT_CHAT", BotChat)
 	conf, err := config.GetConfig()
 	assert.NoError(t, err)
 	httpmock.Activate()
