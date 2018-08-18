@@ -7,9 +7,9 @@ import (
 	"os"
 	"testing"
 
+	"github.com/anatoliyfedorenko/bitbucketbot/config"
 	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
-	"gitlab.com/bitbucketbot/config"
 )
 
 func TestNewBotReturnsError(t *testing.T) {
