@@ -66,7 +66,7 @@ func (bot *Bot) PullRequestCommented(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	text := fmt.Sprintf("%s написал комментарий к пул реквесту [#%v](%v): %v.", pr.Actor.DisplayName, pr.PullRequest.ID, pr.PullRequest.Links.HTML.Href, pr.Comment.Content.Markup)
+	text := fmt.Sprintf("%s написал комментарий к пул реквесту [#%v](%v): %v.", pr.Actor.DisplayName, pr.PullRequest.ID, pr.PullRequest.Links.HTML.Href, pr.Comment.Content.Raw)
 	logrus.Println(text)
 	if pr.Actor.DisplayName != "" && pr.PullRequest.ID != 0 && pr.PullRequest.Links.HTML.Href != "" && pr.Comment.Content.HTML != "" {
 		bot.SendUpdate(text)
