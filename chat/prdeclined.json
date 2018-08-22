@@ -1,63 +1,52 @@
 {
   "pullrequest": {
-    "merge_commit": {
-      "type": "commit",
-      "hash": "2c1774733f0d",
-      "links": {
-        "self": {
-          "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/commit/2c1774733f0d"
-        },
-        "html": {
-          "href": "https://bitbucket.org/anatoliy_fedorenko/bottest/commits/2c1774733f0d"
-        }
-      }
-    },
+    "merge_commit": null,
     "description": "",
     "links": {
       "decline": {
-        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/19/decline"
+        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/21/decline"
       },
       "commits": {
-        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/19/commits"
+        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/21/commits"
       },
       "self": {
-        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/19"
+        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/21"
       },
       "comments": {
-        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/19/comments"
+        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/21/comments"
       },
       "merge": {
-        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/19/merge"
+        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/21/merge"
       },
       "html": {
-        "href": "https://bitbucket.org/anatoliy_fedorenko/bottest/pull-requests/19"
+        "href": "https://bitbucket.org/anatoliy_fedorenko/bottest/pull-requests/21"
       },
       "activity": {
-        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/19/activity"
+        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/21/activity"
       },
       "diff": {
-        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/19/diff"
+        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/21/diff"
       },
       "approve": {
-        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/19/approve"
+        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/21/approve"
       },
       "statuses": {
-        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/19/statuses"
+        "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/pullrequests/21/statuses"
       }
     },
-    "title": "Add good readme.md",
+    "title": "test commit",
     "close_source_branch": false,
     "reviewers": [],
     "destination": {
       "commit": {
         "type": "commit",
-        "hash": "a946c43ee2a5",
+        "hash": "167c5b67a46f",
         "links": {
           "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/commit/a946c43ee2a5"
+            "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/commit/167c5b67a46f"
           },
           "html": {
-            "href": "https://bitbucket.org/anatoliy_fedorenko/bottest/commits/a946c43ee2a5"
+            "href": "https://bitbucket.org/anatoliy_fedorenko/bottest/commits/167c5b67a46f"
           }
         }
       },
@@ -110,18 +99,18 @@
     "source": {
       "commit": {
         "type": "commit",
-        "hash": "43d720accff0",
+        "hash": "f5d05ee00572",
         "links": {
           "self": {
-            "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/commit/43d720accff0"
+            "href": "https://api.bitbucket.org/2.0/repositories/anatoliy_fedorenko/bottest/commit/f5d05ee00572"
           },
           "html": {
-            "href": "https://bitbucket.org/anatoliy_fedorenko/bottest/commits/43d720accff0"
+            "href": "https://bitbucket.org/anatoliy_fedorenko/bottest/commits/f5d05ee00572"
           }
         }
       },
       "branch": {
-        "name": "message"
+        "name": "testbranch"
       },
       "repository": {
         "full_name": "anatoliy_fedorenko/bottest",
@@ -141,12 +130,12 @@
         "uuid": "{09c8fd9c-3d80-4667-9cae-a939472b1a1f}"
       }
     },
-    "created_on": "2018-08-15T07:27:17.225654+00:00",
-    "state": "MERGED",
+    "created_on": "2018-08-22T08:59:11.849022+00:00",
+    "state": "DECLINED",
     "task_count": 0,
     "participants": [],
-    "reason": "",
-    "updated_on": "2018-08-15T07:27:28.040745+00:00",
+    "reason": "Because it is shit",
+    "updated_on": "2018-08-22T08:59:44.908329+00:00",
     "author": {
       "username": "anatoliy_fedorenko",
       "display_name": "Anatoliy Fedorenko",
@@ -166,7 +155,7 @@
       "uuid": "{5b7c1a84-1a5f-4790-96e2-adf2ee640efe}"
     },
     "type": "pullrequest",
-    "id": 19
+    "id": 21
   },
   "actor": {
     "username": "anatoliy_fedorenko",

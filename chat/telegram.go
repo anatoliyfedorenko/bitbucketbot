@@ -117,7 +117,7 @@ func (bot *Bot) PullRequestDeclined(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
-	text := fmt.Sprintf("%v закрыл пул реквест [#%v](%v)", pr.Actor.DisplayName, pr.PullRequest.ID, pr.PullRequest.Links.HTML.Href)
+	text := fmt.Sprintf("%v закрыл пул реквест [#%v](%v): '%v'", pr.Actor.DisplayName, pr.PullRequest.ID, pr.PullRequest.Links.HTML.Href, pr.PullRequest.Reason)
 	logrus.Println(text)
 	if pr.Actor.DisplayName != "" && pr.PullRequest.ID != 0 && pr.PullRequest.Links.HTML.Href != "" {
 		bot.SendUpdate(text)

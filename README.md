@@ -48,6 +48,7 @@ set +a
 | PR Commented | <адресСервераСБотом>:порт/pull_request_commented |
 | PR Approved | <адресСервераСБотом>:порт/pull_request_approved | 
 | PR Merged | <адресСервераСБотом>:порт/pull_request_merged | 
+| PR Declined | <адресСервераСБотом>:порт/pull_request_declined | 
 
 ### Шаг 4 Запустить бота 
 
