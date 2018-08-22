@@ -14,8 +14,8 @@ import (
 
 // Just change these constants to test bot in real chat.
 // Make sure you add a bot to the chat
-const BotToken = "testToken"
-const BotChat = "-12345"
+const BotToken = "638667863:AAFLWagdVgmNJFbwo_nZ-paKFMBAQj9Fo74"
+const BotChat = "-275166411"
 
 func TestSendUpdate(t *testing.T) {
 	bot := setupTestBot(t)
@@ -56,6 +56,7 @@ func TestPullRequestsSucceed(t *testing.T) {
 		{"PR Commented", "prcommented.json", "/pull_request_commented"},
 		{"PR Approved", "prapproved.json", "/pull_request_approved"},
 		{"PR Merged", "prmerged.json", "/pull_request_merged"},
+		{"PR Declined", "prdeclined.json", "/pull_request_declined"},
 	}
 
 	for _, tt := range testCases {
@@ -75,6 +76,8 @@ func TestPullRequestsSucceed(t *testing.T) {
 			bot.PullRequestApproved(rr, req)
 		case "PR Merged":
 			bot.PullRequestMerged(rr, req)
+		case "PR Declined":
+			bot.PullRequestDeclined(rr, req)
 		}
 	}
 }
@@ -90,6 +93,7 @@ func TestPullRequestsFail(t *testing.T) {
 		{"PR Commented", "", "/pull_request_commented"},
 		{"PR Approved", "", "/pull_request_approved"},
 		{"PR Merged", "", "/pull_request_merged"},
+		{"PR Declined", "", "/pull_request_declined"},
 	}
 
 	for _, tt := range testCases {
@@ -109,6 +113,8 @@ func TestPullRequestsFail(t *testing.T) {
 			bot.PullRequestApproved(rr, req)
 		case "PR Merged":
 			bot.PullRequestMerged(rr, req)
+		case "PR Declined":
+			bot.PullRequestDeclined(rr, req)
 		}
 	}
 }

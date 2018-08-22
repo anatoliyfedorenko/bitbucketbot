@@ -107,3 +107,20 @@ func (bot *Bot) PullRequestMerged(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+//PullRequestDeclined handles PR Merged Webhook POST requests
+func (bot *Bot) PullRequestDeclined(w http.ResponseWriter, r *http.Request) {
+	logrus.Println("PR Declined!")
+	decoder := json.NewDecoder(r.Body)
+	var pr bitbucket.PullRequestDeclinedPayload
+	err := decoder.Decode(&pr)
+	if err != nil {
+		logrus.Errorf("Decode failed: %v", err)
+	}
+	text := fmt.Sprintf("%v закрыл пул реквест [#%v](%v)", pr.Actor.DisplayName, pr.PullRequest.ID, pr.PullRequest.Links.HTML.Href)
+	logrus.Println(text)
+	if pr.Actor.DisplayName != "" && pr.PullRequest.ID != 0 && pr.PullRequest.Links.HTML.Href != "" {
+		bot.SendUpdate(text)
+	}
+
+}

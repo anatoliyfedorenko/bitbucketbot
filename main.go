@@ -23,6 +23,7 @@ func main() {
 	http.HandleFunc("/pull_request_commented", bot.PullRequestCommented)
 	http.HandleFunc("/pull_request_approved", bot.PullRequestApproved)
 	http.HandleFunc("/pull_request_merged", bot.PullRequestMerged)
+	http.HandleFunc("/pull_request_declined", bot.PullRequestDeclined)
 
 	http.ListenAndServe(":8080", nil)
 }

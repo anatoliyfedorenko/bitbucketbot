@@ -9,4 +9,5 @@ type Chat interface {
 	PullRequestCommented(http.ResponseWriter, *http.Request)
 	PullRequestApproved(http.ResponseWriter, *http.Request)
 	PullRequestMerged(http.ResponseWriter, *http.Request)
+	PullRequestDeclined(http.ResponseWriter, *http.Request)
 }
