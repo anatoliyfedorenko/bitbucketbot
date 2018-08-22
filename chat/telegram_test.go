@@ -14,8 +14,8 @@ import (
 
 // Just change these constants to test bot in real chat.
 // Make sure you add a bot to the chat
-const BotToken = "638667863:AAFLWagdVgmNJFbwo_nZ-paKFMBAQj9Fo74"
-const BotChat = "-275166411"
+const BotToken = "testToken"
+const BotChat = "-12345"
 
 func TestSendUpdate(t *testing.T) {
 	bot := setupTestBot(t)
