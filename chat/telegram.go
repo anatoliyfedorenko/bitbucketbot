@@ -66,6 +66,7 @@ func (bot *Bot) PullRequestCommented(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logrus.Errorf("Decode failed: %v", err)
 	}
+	// if comment is created, bot will send a message with a link to a comment.
 	text := fmt.Sprintf("%s написал [комментарий](%v) к пул реквесту [#%v](%v): %v.", pr.Actor.DisplayName, pr.Comment.Links.HTML.Href, pr.PullRequest.ID, pr.PullRequest.Links.HTML.Href, pr.Comment.Content.Raw)
 	logrus.Println(text)
 	if pr.Actor.DisplayName != "" && pr.PullRequest.ID != 0 && pr.PullRequest.Links.HTML.Href != "" && pr.Comment.Content.HTML != "" {
